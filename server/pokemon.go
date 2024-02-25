@@ -1,5 +1,7 @@
 package server
 
+import "github.com/google/uuid"
+
 // the pokemon struct will need a move set. Moves will be a struct of their own.  I will start off just worrying about
 // damage based moves to get me started.
 
@@ -9,11 +11,35 @@ type Pokemon struct {
 	Name  string       `json:"pokemon-name"`
 	Hp    int          `json:"hp"`
 	Moves []DamageMove `json:"moves"`
+	id    uuid.UUID
 }
 
 // Removes health from the pokemon based on attack's power
 func (p *Pokemon) Attack(o *Pokemon, attack DamageMove) {
 	o.Hp -= attack.Power
+}
+
+// create a new pokemon for player based on request
+// defualts to returning a pikachu
+func NewMonster(name string) Pokemon {
+	monsters := []Pokemon{Pika, Gibble, Bulbasaur, Whooper}
+
+	for i := range monsters {
+		if monsters[i].Name == name {
+			return Pokemon{
+				Name:  monsters[i].Name,
+				Hp:    monsters[i].Hp,
+				Moves: monsters[i].Moves,
+				id:    uuid.New(),
+			}
+		}
+	}
+	return Pokemon{
+		Name:  Pika.Name,
+		Hp:    Pika.Hp,
+		Moves: Pika.Moves,
+		id:    uuid.New(),
+	}
 }
 
 type DamageMove struct {

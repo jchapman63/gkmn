@@ -17,11 +17,30 @@ var baseUrl = "http://localhost:8080"
 // Server will manipulate a game struct of its own and
 // send it here
 func UpdateGameData(g *server.Game) error {
-	g, err := jsonResponseToGameStruct(g, baseUrl+"/state")
+	_, err := jsonResponseToGameStruct(g, baseUrl+"/state")
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+// g, the struct to unpack into
+// endpoint, the full api url
+func jsonResponseToGameStruct(g *server.Game, endpoint string) (*server.Game, error) {
+	respJSON, err := http.Get(endpoint)
+	if err != nil {
+		fmt.Print("Data Request Failed: ", err)
+		return nil, err
+	}
+	bodyJSON, err := io.ReadAll(respJSON.Body)
+	if err != nil {
+		fmt.Println("Error reading json: ", err)
+		return nil, err
+	}
+	if err := json.Unmarshal(bodyJSON, &g); err != nil {
+		return nil, err
+	}
+	return g, nil
 }
 
 func AvailableMonsters() ([]string, error) {
@@ -72,6 +91,18 @@ func JoinGame(p *server.Player) (*http.Response, error) {
 	return resp, nil
 }
 
+// TODO switch attacker to be using a UUID and target to be using a UUID
+func AttackPkmn(attacker string, target string, move string) (*http.Response, error) {
+	attackInfo := map[string]string{
+		"attacker": attacker,
+		"target":   target,
+		"move":     move,
+	}
+	data, _ := json.Marshal(attackInfo)
+
+	// TODO: finish API call
+}
+
 func AddPokemonToPlayer(playerName string, pkmnName string) (*http.Response, error) {
 
 	data := server.MonsterAdder{
@@ -103,25 +134,4 @@ func BasicAttack() (*server.Game, error) {
 
 	// return game, nil
 	return nil, nil
-}
-
-// s, the struct to unpack into
-// endpoint, the full api url
-func jsonResponseToGameStruct(g *server.Game, endpoint string) (*server.Game, error) {
-	respJSON, err := http.Get(endpoint)
-	if err != nil {
-		fmt.Print("Data Request Failed: ", err)
-		return nil, err
-	}
-
-	bodyJSON, err := io.ReadAll(respJSON.Body)
-	if err != nil {
-		fmt.Println("Error reading json: ", err)
-		return nil, err
-	}
-	if err := json.Unmarshal(bodyJSON, &g); err != nil {
-		return nil, err
-	}
-
-	return g, nil
 }

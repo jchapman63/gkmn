@@ -35,12 +35,35 @@ func Server() {
 		game.AddPlayerToMatch(&player)
 	})
 
+	// a simple attack as a demo
+	// TODO: FINISH handling decoded JSON for one player's specific mon to attack another player's specific mon with a specific move
+	http.HandleFunc("/damage", func(w http.ResponseWriter, r *http.Request) {
+		decoder := json.NewDecoder(r.Body)
+
+		var results any
+		err := decoder.Decode(results)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(results)
+		// pika.Attack(bulbasaur, tackle)
+	})
+
 	http.HandleFunc("/addPokemonToPlayer", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
 		var adder MonsterAdder
 		err := decoder.Decode(&adder)
 		if err != nil {
 			panic(err)
+		}
+
+		playerName := adder.PlayerName
+		monsterName := adder.MonsterName
+		monster := NewMonster(monsterName)
+		for i := range game.Players {
+			if game.Players[i].Name == playerName {
+				game.Players[i].Pokemon = append(game.Players[i].Pokemon, &monster)
+			}
 		}
 	})
 
@@ -54,12 +77,6 @@ func Server() {
 			Whooper.Name,
 		}
 		json.NewEncoder(w).Encode(pokemon)
-	})
-
-	// a simple attack as a demo
-	// TODO: Handle arguments for which pokemon attacks and which pokemon gets attacked
-	http.HandleFunc("/damage", func(w http.ResponseWriter, r *http.Request) {
-		// pika.Attack(bulbasaur, tackle)
 	})
 
 	// return digestable game state

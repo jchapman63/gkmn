@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gkmn/server"
 	"os/exec"
+	"time"
 )
 
 func ClientStart() {
@@ -27,6 +28,14 @@ func ClientStart() {
 			panic(err)
 		}
 	}
+	// initialize game
+	var game server.Game
+	err := UpdateGameData(&game)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("here is game: ", game)
+	}
 
 	// player create interface
 	playerName := CreatePlayer()
@@ -42,6 +51,16 @@ func ClientStart() {
 	}
 	fmt.Println(resp.StatusCode, " Player ", playerName, " Connected Server! ")
 
+	// player queue
+	if len(game.Players) != 2 {
+		fmt.Println("Waiting for player 2")
+	}
+	for len(game.Players) != 2 {
+		UpdateGameData(&game)
+		time.Sleep(500 * time.Millisecond)
+		fmt.Println("Checking for other players...")
+	}
+
 	// Player chooses pokemon to fight with
 	monster := ChooseMonster()
 	resp, err = AddPokemonToPlayer(player.Name, monster)
@@ -51,26 +70,11 @@ func ClientStart() {
 	}
 	fmt.Println(resp.StatusCode, " Player ", playerName, " added monster: ", monster)
 
-	// initialize game
-	var game *server.Game
-	err = UpdateGameData(game)
-	if err != nil {
-		panic(err)
-	}
-
-	if len(game.Players) != 2 {
-		fmt.Println("Waiting for player 2")
-	}
-	if err != nil {
-		fmt.Println("Connection Failed: ", err)
-	}
-	// a "while" loop that goes until the game is over happens here.
+	// play the game
 	isOver, err := IsGameOver()
 	if err != nil {
 		fmt.Println("Connection Failed: ", err)
 	}
-
-	// play the game
 	for !isOver {
 		// generate and get actions
 		choice := AttackMenu()
