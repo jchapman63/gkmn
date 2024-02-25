@@ -11,13 +11,17 @@ import (
 
 var baseUrl = "http://localhost:8080"
 
-func GameData() (*server.Game, error) {
-	var game *server.Game
-	game, err := jsonResponseToGameStruct(game, baseUrl+"/state")
+// TODO: Refactor to fit documentation comments
+// modify a pointer to a game object
+// Meant to be called once at server start
+// Server will manipulate a game struct of its own and
+// send it here
+func UpdateGameData(g *server.Game) error {
+	g, err := jsonResponseToGameStruct(g, baseUrl+"/state")
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return game, nil
+	return nil
 }
 
 func AvailableMonsters() ([]string, error) {
@@ -90,14 +94,15 @@ func AddPokemonToPlayer(playerName string, pkmnName string) (*http.Response, err
 // I may actually want to pass other params too though, so I will abstract atleast the RESP and JSON to struct ?
 func BasicAttack() (*server.Game, error) {
 	// question, will passing game here update the current game object????
-	var game *server.Game
-	http.Get(baseUrl + "/damage")
-	game, err := GameData()
-	if err != nil {
-		return nil, err
-	}
+	// var game *server.Game
+	// http.Get(baseUrl + "/damage")
+	// game, err := GameData()
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	return game, nil
+	// return game, nil
+	return nil, nil
 }
 
 // s, the struct to unpack into

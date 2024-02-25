@@ -51,7 +51,16 @@ func ClientStart() {
 	}
 	fmt.Println(resp.StatusCode, " Player ", playerName, " added monster: ", monster)
 
-	game, err := GameData()
+	// initialize game
+	var game *server.Game
+	err = UpdateGameData(game)
+	if err != nil {
+		panic(err)
+	}
+
+	if len(game.Players) != 2 {
+		fmt.Println("Waiting for player 2")
+	}
 	if err != nil {
 		fmt.Println("Connection Failed: ", err)
 	}
@@ -60,22 +69,17 @@ func ClientStart() {
 	if err != nil {
 		fmt.Println("Connection Failed: ", err)
 	}
+
+	// play the game
 	for !isOver {
 		// generate and get actions
 		choice := AttackMenu()
 
 		// temporary print
-		fmt.Println("json data")
-		fmt.Println(game.Pokemon[0].Hp) // returns 100
-		if choice == "tackle" {
-			// call attack, it returns a game state -> which is the struct of interest
-			game, err := BasicAttack()
-			if err != nil {
-				fmt.Println("failed attack called: ", err)
-				return
-			}
-			fmt.Println("json data after attack")
-			fmt.Println(game.Pokemon[1].Hp)
+		// fmt.Println("json data")
+		// fmt.Println(game.Pokemon[0].Hp) // returns 100
+		if choice != "quit" {
+			// player's pokemon attacks oppenents pokemon
 		} else if choice == "quit" {
 			return
 		}

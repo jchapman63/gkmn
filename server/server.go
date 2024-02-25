@@ -9,34 +9,17 @@ import (
 	"time"
 )
 
-func Server() {
-	gameServer := &http.Server{
-		Addr: ":8080",
-	}
-	// initialize a simple game environment
-	tackle := DamageMove{
-		Name:  "tackle",
-		Power: 10,
-	}
-	pika := &Pokemon{
-		Name: "pikachu",
-		Hp:   100,
-		Moves: []DamageMove{
-			tackle,
-		},
-	}
-	bulbasaur := &Pokemon{
-		Name: "bulbasaur",
-		Hp:   100,
-		Moves: []DamageMove{
-			tackle,
-		},
-	}
+var gameServer *http.Server = &http.Server{
+	Addr: ":8080",
+}
 
+func Server() {
 	game := Game{
-		Pokemon: []*Pokemon{
-			pika,
-			bulbasaur,
+		AvailablePokemon: []Pokemon{
+			Pika,
+			Bulbasaur,
+			Gibble,
+			Whooper,
 		},
 	}
 
@@ -76,7 +59,7 @@ func Server() {
 	// a simple attack as a demo
 	// TODO: Handle arguments for which pokemon attacks and which pokemon gets attacked
 	http.HandleFunc("/damage", func(w http.ResponseWriter, r *http.Request) {
-		pika.Attack(bulbasaur, tackle)
+		// pika.Attack(bulbasaur, tackle)
 	})
 
 	// return digestable game state
@@ -92,18 +75,12 @@ func Server() {
 	})
 
 	fmt.Println("Server is listening localhost:8080")
-	// why nil here? But, this will serve the app
-	log.Fatal(gameServer.ListenAndServe())
 
+	// serve the application
+	log.Fatal(gameServer.ListenAndServe())
 	if game.IsGameOver() {
 		shutdownCtx, shutdownRelease := context.WithTimeout(context.Background(), 10*time.Second)
 		defer shutdownRelease()
 		gameServer.Shutdown(shutdownCtx)
 	}
-}
-
-func localAttackTest(pika *Pokemon, bulb *Pokemon) {
-	move := pika.Moves[0]
-	pika.Attack(bulb, move)
-	fmt.Print("bubla health: ", bulb.Hp)
 }

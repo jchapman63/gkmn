@@ -26,7 +26,7 @@ var Bulbasaur = Pokemon{
 	Name: "bulbasaur",
 	Hp:   100,
 	Moves: []DamageMove{
-		tackle,
+		Tackle,
 	},
 }
 
@@ -34,7 +34,7 @@ var Pika = Pokemon{
 	Name: "pikachu",
 	Hp:   100,
 	Moves: []DamageMove{
-		tackle,
+		Tackle,
 	},
 }
 
@@ -42,7 +42,7 @@ var Gibble = Pokemon{
 	Name: "gibble",
 	Hp:   100,
 	Moves: []DamageMove{
-		tackle,
+		Tackle,
 	},
 }
 
@@ -50,12 +50,12 @@ var Whooper = Pokemon{
 	Name: "whooper",
 	Hp:   100,
 	Moves: []DamageMove{
-		tackle,
+		Tackle,
 	},
 }
 
 // available moves
-var tackle = DamageMove{
+var Tackle = DamageMove{
 	Name:  "tackle",
 	Power: 10,
 }
