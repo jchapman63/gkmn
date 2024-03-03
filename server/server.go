@@ -25,12 +25,14 @@ func Server() {
 
 	http.HandleFunc("/join", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
-		var player Player
+		var playerName string
 
-		err := decoder.Decode(&player)
+		err := decoder.Decode(&playerName)
 		if err != nil {
 			panic(err)
 		}
+
+		player := NewPlayer(playerName)
 
 		game.AddPlayerToMatch(&player)
 	})
@@ -45,8 +47,9 @@ func Server() {
 		if err != nil {
 			panic(err)
 		}
+
+		// expect server results to be a json instance with two ids and a move
 		fmt.Println(results)
-		// pika.Attack(bulbasaur, tackle)
 	})
 
 	http.HandleFunc("/addPokemonToPlayer", func(w http.ResponseWriter, r *http.Request) {

@@ -38,13 +38,11 @@ func ClientStart() {
 	}
 
 	// player create interface
-	playerName := CreatePlayer()
-	var player = &server.Player{
-		Name: playerName,
-	}
+	playerName := NamePlayer()
+	var player = server.NewPlayer(playerName)
 
 	// Player joining sever
-	resp, err := JoinGame(player)
+	resp, err := JoinGame(playerName)
 	if err != nil {
 		fmt.Println("Player ", playerName, "Connection Failed: ", err)
 		return
@@ -78,12 +76,9 @@ func ClientStart() {
 	for !isOver {
 		// generate and get actions
 		choice := AttackMenu()
-
-		// temporary print
-		// fmt.Println("json data")
-		// fmt.Println(game.Pokemon[0].Hp) // returns 100
 		if choice != "quit" {
 			// player's pokemon attacks oppenents pokemon
+			// need: player data, opponent data
 		} else if choice == "quit" {
 			return
 		}

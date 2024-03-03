@@ -29,7 +29,7 @@ func MainMenu() string {
 	return choice
 }
 
-func CreatePlayer() string {
+func NamePlayer() string {
 	fmt.Print("Name your player: ")
 	reader := bufio.NewReader(os.Stdin)
 	// read up to and including delimiter

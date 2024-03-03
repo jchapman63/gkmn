@@ -7,6 +7,8 @@ import (
 	"gkmn/server"
 	"io"
 	"net/http"
+
+	"github.com/google/uuid"
 )
 
 var baseUrl = "http://localhost:8080"
@@ -82,7 +84,7 @@ func IsGameOver() (bool, error) {
 	return isOver, nil
 }
 
-func JoinGame(p *server.Player) (*http.Response, error) {
+func JoinGame(p string) (*http.Response, error) {
 	newData, _ := json.Marshal(p)
 	resp, err := http.Post(baseUrl+"/join", "application/json", bytes.NewBuffer(newData))
 	if err != nil {
@@ -92,15 +94,18 @@ func JoinGame(p *server.Player) (*http.Response, error) {
 }
 
 // TODO switch attacker to be using a UUID and target to be using a UUID
-func AttackPkmn(attacker string, target string, move string) (*http.Response, error) {
-	attackInfo := map[string]string{
+func AttackPkmn(attacker uuid.UUID, target uuid.UUID, move string) (*http.Response, error) {
+	attackInfo := map[string]any{
 		"attacker": attacker,
 		"target":   target,
 		"move":     move,
 	}
 	data, _ := json.Marshal(attackInfo)
-
-	// TODO: finish API call
+	resp, err := http.Post(baseUrl+"/attackEndpoint", "application/json", bytes.NewBuffer(data))
+	if err != nil {
+		panic(err)
+	}
+	return resp, nil
 }
 
 func AddPokemonToPlayer(playerName string, pkmnName string) (*http.Response, error) {
