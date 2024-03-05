@@ -2,8 +2,9 @@ package server
 
 // THINKPOINT: check that there is not a memory problem here
 type Game struct {
-	Players          []*Player `json:"players"`
-	AvailablePokemon []Pokemon `json:"pokemon"`
+	Players          []*Player  `json:"players"`
+	AvailablePokemon []Pokemon  `json:"pokemon"`
+	FightingPokemon  []*Pokemon `json:"fightingPkmn"`
 }
 
 // all pokemon in one player's party have fainted

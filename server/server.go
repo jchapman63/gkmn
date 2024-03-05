@@ -42,16 +42,31 @@ func Server() {
 	http.HandleFunc("/damage", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
 
-		var results any
-		err := decoder.Decode(results)
+		var results map[string]any
+		err := decoder.Decode(&results)
 		if err != nil {
 			panic(err)
 		}
 
-		// expect server results to be a json instance with two ids and a move
-		fmt.Println(results)
+		// unpack json
+		moveName := results["move"]
+
+		var move DamageMove
+		// TODO: fix to handle any move
+		if moveName == "tackle" {
+			move = Tackle
+		}
+		target := results["target"]
+		fmt.Println("move:", moveName, "; target:", target)
+
+		for i := range game.AvailablePokemon {
+			if game.AvailablePokemon[i].id == target {
+				game.AvailablePokemon[i].Hp -= move.Power
+			}
+		}
 	})
 
+	// TODO: Update to be done by player ID and not name
 	http.HandleFunc("/addPokemonToPlayer", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
 		var adder MonsterAdder
@@ -68,6 +83,8 @@ func Server() {
 				game.Players[i].Pokemon = append(game.Players[i].Pokemon, &monster)
 			}
 		}
+
+		game.FightingPokemon = append(game.FightingPokemon, &monster)
 	})
 
 	// allow players to choose an available monster

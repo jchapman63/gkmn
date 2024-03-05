@@ -1,0 +1,17 @@
+3/3/24
+
+Today I had to reinstall xcode developer tools to get go working on my mac.  I don't know why those things
+were needed.  But things are working again.  
+
+I also refactored how creating a player works.  Now, a player name is created client side and sent to the server.
+Players now have a uuid, I will need to make sure this is working as I will have to leverage UUID for Players
+and Pokemon as they battle eachother.
+
+Also, the game logic needs a turn based system where one player goes at a time and the other is locked up.  For simplicity,
+this will start with the host being the first player to go.
+
+SMART GOAL: implement all of these features by the end of spring break.
+
+3/4/24
+
+Added a fighting pokemon slice that is a pointer to pokemon in the game.  This errored out and was empty though it should not be.

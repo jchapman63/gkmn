@@ -94,14 +94,13 @@ func JoinGame(p string) (*http.Response, error) {
 }
 
 // TODO switch attacker to be using a UUID and target to be using a UUID
-func AttackPkmn(attacker uuid.UUID, target uuid.UUID, move string) (*http.Response, error) {
+func AttackPkmn(target uuid.UUID, move string) (*http.Response, error) {
 	attackInfo := map[string]any{
-		"attacker": attacker,
-		"target":   target,
-		"move":     move,
+		"target": target,
+		"move":   move,
 	}
 	data, _ := json.Marshal(attackInfo)
-	resp, err := http.Post(baseUrl+"/attackEndpoint", "application/json", bytes.NewBuffer(data))
+	resp, err := http.Post(baseUrl+"/damage", "application/json", bytes.NewBuffer(data))
 	if err != nil {
 		panic(err)
 	}

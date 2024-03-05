@@ -20,11 +20,13 @@ func ClientStart() {
 		exec.Command("cd", "../").Output()
 		_, err := exec.Command("docker", "build", "-t", "gokemon-build", ".").Output()
 		if err != nil {
+			fmt.Println("image build failed")
 			panic(err)
 		}
 
 		_, err = exec.Command("docker", "run", "-d", "-p", "8080:8080", "gokemon-build:latest").Output()
 		if err != nil {
+			fmt.Println("image run failed")
 			panic(err)
 		}
 	}
@@ -79,6 +81,17 @@ func ClientStart() {
 		if choice != "quit" {
 			// player's pokemon attacks oppenents pokemon
 			// need: player data, opponent data
+			playerID := player.ID
+			opponentID := game.Players[1].ID
+			if playerID == opponentID {
+				opponentID = game.Players[0].ID
+			}
+			_, err := AttackPkmn(opponentID, choice)
+			if err != nil {
+				panic(err)
+			}
+
+			fmt.Println(game.FightingPokemon[0].Hp)
 		} else if choice == "quit" {
 			return
 		}
