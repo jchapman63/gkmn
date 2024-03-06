@@ -1,7 +1,7 @@
 3/3/24
 
 Today I had to reinstall xcode developer tools to get go working on my mac.  I don't know why those things
-were needed.  But things are working again.  
+were needed.  But things are working again.
 
 I also refactored how creating a player works.  Now, a player name is created client side and sent to the server.
 Players now have a uuid, I will need to make sure this is working as I will have to leverage UUID for Players
@@ -15,3 +15,6 @@ SMART GOAL: implement all of these features by the end of spring break.
 3/4/24
 
 Added a fighting pokemon slice that is a pointer to pokemon in the game.  This errored out and was empty though it should not be.
+
+3/6/24
+pkmn ids
