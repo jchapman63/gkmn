@@ -11,7 +11,7 @@ type Pokemon struct {
 	Name  string       `json:"pokemon-name"`
 	Hp    int          `json:"hp"`
 	Moves []DamageMove `json:"moves"`
-	id    uuid.UUID
+	ID    uuid.UUID    `json:"pkmn_id"`
 }
 
 // Removes health from the pokemon based on attack's power
@@ -30,7 +30,7 @@ func NewMonster(name string) Pokemon {
 				Name:  monsters[i].Name,
 				Hp:    monsters[i].Hp,
 				Moves: monsters[i].Moves,
-				id:    uuid.New(),
+				ID:    uuid.New(),
 			}
 		}
 	}
@@ -38,7 +38,7 @@ func NewMonster(name string) Pokemon {
 		Name:  Pika.Name,
 		Hp:    Pika.Hp,
 		Moves: Pika.Moves,
-		id:    uuid.New(),
+		ID:    uuid.New(),
 	}
 }
 

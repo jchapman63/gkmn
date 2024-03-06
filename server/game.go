@@ -1,5 +1,10 @@
 package server
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 // THINKPOINT: check that there is not a memory problem here
 type Game struct {
 	Players          []*Player  `json:"players"`
@@ -22,4 +27,12 @@ func (g *Game) IsGameOver() bool {
 
 func (g *Game) AddPlayerToMatch(p *Player) {
 	g.Players = append(g.Players, p)
+}
+
+func (g *Game) logGameStatus() {
+	data, err := json.Marshal(g)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%s\n", data)
 }

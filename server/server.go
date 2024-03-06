@@ -36,7 +36,7 @@ func Server() {
 
 		game.AddPlayerToMatch(&player)
 
-		fmt.Println("player joined")
+		game.logGameStatus()
 	})
 
 	// a simple attack as a demo
@@ -66,6 +66,8 @@ func Server() {
 				game.AvailablePokemon[i].Hp -= move.Power
 			}
 		}
+
+		game.logGameStatus()
 	})
 
 	// TODO: Update to be done by player ID and not name
@@ -87,6 +89,8 @@ func Server() {
 		}
 
 		game.FightingPokemon = append(game.FightingPokemon, &monster)
+
+		game.logGameStatus()
 	})
 
 	// allow players to choose an available monster
@@ -99,9 +103,11 @@ func Server() {
 			Whooper.Name,
 		}
 		json.NewEncoder(w).Encode(pokemon)
+
+		game.logGameStatus()
 	})
 
-	// return digestable game state
+	// return digestable game state, might not ever use
 	http.HandleFunc("/state", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(game)
