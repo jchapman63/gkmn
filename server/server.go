@@ -35,6 +35,8 @@ func Server() {
 		player := NewPlayer(playerName)
 
 		game.AddPlayerToMatch(&player)
+
+		fmt.Println("player joined")
 	})
 
 	// a simple attack as a demo
