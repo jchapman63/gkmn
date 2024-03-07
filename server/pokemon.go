@@ -14,9 +14,8 @@ type Pokemon struct {
 	ID    uuid.UUID    `json:"pkmn_id"`
 }
 
-// Removes health from the pokemon based on attack's power
-func (p *Pokemon) Attack(o *Pokemon, attack DamageMove) {
-	o.Hp -= attack.Power
+func (p *Pokemon) LoseHealth(amount int) {
+	p.Hp -= amount
 }
 
 // create a new pokemon for player based on request

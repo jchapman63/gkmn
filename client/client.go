@@ -14,21 +14,7 @@ func ClientStart() {
 
 	// attempt to build host
 	if action == "host" {
-
-		fmt.Println("Building Server...")
-		// build and run docker container
-		exec.Command("cd", "../").Output()
-		_, err := exec.Command("docker", "build", "-t", "gokemon-build", ".").Output()
-		if err != nil {
-			fmt.Println("image build failed")
-			panic(err)
-		}
-
-		_, err = exec.Command("docker", "run", "-d", "-p", "8080:8080", "gokemon-build:latest").Output()
-		if err != nil {
-			fmt.Println("image run failed")
-			panic(err)
-		}
+		startServer()
 	}
 	// initialize game
 	var game server.Game
@@ -63,12 +49,24 @@ func ClientStart() {
 
 	// Player chooses pokemon to fight with
 	monster := ChooseMonster()
-	resp, err = AddPokemonToPlayer(player.Name, monster)
+	_, err = AddPokemonToPlayer(player.Name, monster)
 	if err != nil {
 		fmt.Println("Player ", playerName, " Failed to add pokemon : ", err)
 		return
 	}
-	fmt.Println(resp.StatusCode, " Player ", playerName, " added monster: ", monster)
+
+	// find player's opponent
+	opponent := game.Players[1]
+	if player.ID == opponent.ID {
+		opponent = game.Players[0]
+	}
+
+	// wait for opponent to select pokemon
+	for len(opponent.Pokemon) == 0 {
+		UpdateGameData(&game)
+		time.Sleep(500 * time.Millisecond)
+		fmt.Println("Waiting for opponent selection...")
+	}
 
 	// play the game
 	isOver, err := IsGameOver()
@@ -77,21 +75,17 @@ func ClientStart() {
 	}
 	for !isOver {
 		// generate and get actions
+		UpdateGameData(&game)
 		choice := AttackMenu()
 		if choice != "quit" {
-			// player's pokemon attacks oppenents pokemon
-			// need: player data, opponent data
-			playerID := player.ID
-			opponentID := game.Players[1].ID
-			if playerID == opponentID {
-				opponentID = game.Players[0].ID
-			}
-			_, err := AttackPkmn(opponentID, choice)
+
+			// temporary
+			pkmnToAttack := opponent.Pokemon[0].ID
+			fmt.Println("pkmnToAttack", pkmnToAttack)
+			_, err := AttackPkmn(pkmnToAttack, choice)
 			if err != nil {
 				panic(err)
 			}
-
-			fmt.Println(game.FightingPokemon[0].Hp)
 		} else if choice == "quit" {
 			return
 		}
@@ -100,5 +94,22 @@ func ClientStart() {
 		if err != nil {
 			fmt.Println("Connection Failed: ", err)
 		}
+	}
+}
+
+func startServer() {
+	fmt.Println("Building Server...")
+	// build and run docker container
+	exec.Command("cd", "../").Output()
+	_, err := exec.Command("docker", "build", "-t", "gokemon-build", ".").Output()
+	if err != nil {
+		fmt.Println("image build failed")
+		panic(err)
+	}
+
+	_, err = exec.Command("docker", "run", "-d", "-p", "8080:8080", "gokemon-build:latest").Output()
+	if err != nil {
+		fmt.Println("image run failed")
+		panic(err)
 	}
 }

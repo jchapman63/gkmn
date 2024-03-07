@@ -14,7 +14,7 @@ var gameServer *http.Server = &http.Server{
 }
 
 func Server() {
-	game := Game{
+	game := &Game{
 		AvailablePokemon: []Pokemon{
 			Pika,
 			Bulbasaur,
@@ -59,11 +59,11 @@ func Server() {
 			move = Tackle
 		}
 		target := results["target"]
-		fmt.Println("move:", moveName, "; target:", target)
 
-		for i := range game.AvailablePokemon {
-			if game.AvailablePokemon[i].id == target {
-				game.AvailablePokemon[i].Hp -= move.Power
+		for i := range game.FightingPokemon {
+			if game.FightingPokemon[i].ID.String() == target {
+				fmt.Println("target: ", target)
+				game.FightingPokemon[i].LoseHealth(move.Power)
 			}
 		}
 
