@@ -19,7 +19,7 @@ func (p *Pokemon) LoseHealth(amount int) {
 }
 
 // create a new pokemon for player based on request
-// defualts to returning a pikachu
+// defaults to returning a pikachu
 func NewMonster(name string) Pokemon {
 	monsters := []Pokemon{Pika, Gibble, Bulbasaur, Whooper}
 

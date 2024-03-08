@@ -93,7 +93,6 @@ func JoinGame(p string) (*http.Response, error) {
 	return resp, nil
 }
 
-// TODO switch attacker to be using a UUID and target to be using a UUID
 func AttackPkmn(target uuid.UUID, move string) (*http.Response, error) {
 	attackInfo := map[string]any{
 		"target": target,

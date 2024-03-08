@@ -18,4 +18,7 @@ Added a fighting pokemon slice that is a pointer to pokemon in the game.  This e
 
 3/6/24
 pkmn ids working now! I got the first damages done over the server.
-PROBLEM: only one pokemon is getting attacked by both players
+PROBLEM: only one pokemon is getting attacked by both players.
+
+3/8/24
+Today's goal is to set up turn based game logic
