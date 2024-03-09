@@ -13,11 +13,6 @@ import (
 
 var baseUrl = "http://localhost:8080"
 
-// TODO: Refactor to fit documentation comments
-// modify a pointer to a game object
-// Meant to be called once at server start
-// Server will manipulate a game struct of its own and
-// send it here
 func UpdateGameData(g *server.Game) error {
 	_, err := jsonResponseToGameStruct(g, baseUrl+"/state")
 	if err != nil {
@@ -82,6 +77,24 @@ func IsGameOver() (bool, error) {
 	}
 
 	return isOver, nil
+}
+
+func ChangeTurns() (uuid.UUID, error) {
+	respJSON, err := http.Get(baseUrl + "/changeTurns")
+	if err != nil {
+		panic(err)
+	}
+
+	var turnID uuid.UUID
+	bodyJSON, err := io.ReadAll(respJSON.Body)
+	if err != nil {
+		panic(nil)
+	}
+	if err := json.Unmarshal(bodyJSON, &turnID); err != nil {
+		panic(nil)
+	}
+
+	return turnID, nil
 }
 
 func JoinGame(p string) (*http.Response, error) {

@@ -107,10 +107,19 @@ func Server() {
 		game.logGameStatus()
 	})
 
+	// update and return new player id who's turn it is
+	http.HandleFunc("/changeTurns", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		game.AlternateTurns()
+		game.logGameStatus()
+		json.NewEncoder(w).Encode(game.TurnTaker)
+	})
+
 	// return digestable game state, might not ever use
 	http.HandleFunc("/state", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(game)
+		game.logGameStatus()
 	})
 
 	// calls Game's method to check if game over
