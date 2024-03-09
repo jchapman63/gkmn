@@ -120,21 +120,3 @@ func AddPokemonToPlayer(playerName string, pkmnName string) (*http.Response, err
 	}
 	return resp, nil
 }
-
-// will later have parameters for the pokemon attacking (the client's mon)
-// I could either pass game as parameter, or I could get a new game object... new is more up to date with the server...
-// there is more abstraction I can do between these functions...
-// if I am always going to be getting a new game struct, then I can have one function that takes the url as a parameter ?
-// I may actually want to pass other params too though, so I will abstract atleast the RESP and JSON to struct ?
-func BasicAttack() (*server.Game, error) {
-	// question, will passing game here update the current game object????
-	// var game *server.Game
-	// http.Get(baseUrl + "/damage")
-	// game, err := GameData()
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// return game, nil
-	return nil, nil
-}

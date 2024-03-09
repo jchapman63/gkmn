@@ -21,4 +21,4 @@ pkmn ids working now! I got the first damages done over the server.
 PROBLEM: only one pokemon is getting attacked by both players.
 
 3/8/24
-Today's goal is to set up turn based game logic
+Today's goal is to set up turn based game logic. DONE.
