@@ -22,3 +22,8 @@ PROBLEM: only one pokemon is getting attacked by both players.
 
 3/8/24
 Today's goal is to set up turn based game logic. DONE. TODO: implement client side turn logic
+
+3/10/24
+I refactored the game call and server response to creating a player so that the player struct gets returned to the client.
+I have turn based kind of working in the CLI
+I probably need async/await to get things working

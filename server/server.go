@@ -36,6 +36,9 @@ func Server() {
 
 		game.AddPlayerToMatch(&player)
 
+		// make player grabbable from server
+		json.NewEncoder(w).Encode(player)
+
 		game.logGameStatus()
 	})
 

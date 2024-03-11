@@ -16,13 +16,14 @@ var baseUrl = "http://localhost:8080"
 func UpdateGameData(g *server.Game) error {
 	_, err := jsonResponseToGameStruct(g, baseUrl+"/state")
 	if err != nil {
-		return err
+		panic(err)
 	}
 	return nil
 }
 
 // g, the struct to unpack into
 // endpoint, the full api url
+// should fully update g
 func jsonResponseToGameStruct(g *server.Game, endpoint string) (*server.Game, error) {
 	respJSON, err := http.Get(endpoint)
 	if err != nil {
@@ -97,13 +98,23 @@ func ChangeTurns() (uuid.UUID, error) {
 	return turnID, nil
 }
 
-func JoinGame(p string) (*http.Response, error) {
+func JoinGame(p string) (server.Player, error) {
 	newData, _ := json.Marshal(p)
 	resp, err := http.Post(baseUrl+"/join", "application/json", bytes.NewBuffer(newData))
 	if err != nil {
 		panic(err)
 	}
-	return resp, nil
+
+	var player server.Player
+	bodyJSON, err := io.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+	if err := json.Unmarshal(bodyJSON, &player); err != nil {
+		panic(err)
+	}
+
+	return player, nil
 }
 
 func AttackPkmn(target uuid.UUID, move string) (*http.Response, error) {

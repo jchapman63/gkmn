@@ -47,7 +47,8 @@ func (g *Game) AlternateTurns() {
 		panic("Improper use of function `AlternateTurns`: Not enough players are in the game")
 	}
 
-	if g.TurnTaker == nil && len(g.Players) > 0 {
+	if g.TurnTaker == nil {
+		fmt.Println("No turn set yet.  TurnTaker setting now")
 		g.TurnTaker = &g.Players[0].ID
 	} else {
 		for i := range g.Players {

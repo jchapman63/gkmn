@@ -11,31 +11,30 @@ import (
 func ClientStart() {
 
 	var action string = MainMenu()
+	var isHost bool
 
 	// attempt to build host
 	if action == "host" {
 		startServer()
+		isHost = true
 	}
 	// initialize game
 	var game server.Game
 	err := UpdateGameData(&game)
 	if err != nil {
 		panic(err)
-	} else {
-		fmt.Println("here is game: ", game)
 	}
 
 	// player create interface
 	playerName := NamePlayer()
-	var player = server.NewPlayer(playerName)
 
 	// Player joining sever
-	resp, err := JoinGame(playerName)
+	player, err := JoinGame(playerName)
 	if err != nil {
 		fmt.Println("Player ", playerName, "Connection Failed: ", err)
 		return
 	}
-	fmt.Println(resp.StatusCode, " Player ", playerName, " Connected Server! ")
+	fmt.Println(player.Name, "Joined the server")
 
 	// player queue
 	if len(game.Players) != 2 {
@@ -68,6 +67,19 @@ func ClientStart() {
 		fmt.Println("Waiting for opponent selection...")
 	}
 
+	// set initial turn
+	if isHost {
+		_, err := ChangeTurns()
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	// ensure first turn is selected
+	for game.TurnTaker == nil {
+		UpdateGameData(&game)
+	}
+
 	// play the game
 	isOver, err := IsGameOver()
 	if err != nil {
@@ -76,18 +88,30 @@ func ClientStart() {
 	for !isOver {
 		// generate and get actions
 		UpdateGameData(&game)
-		choice := AttackMenu()
-		if choice != "quit" {
+		fmt.Printf("TurnTaker: %s == player.ID: %s", game.TurnTaker, player.ID)
+		fmt.Printf("Result of comparison: %t", *game.TurnTaker == player.ID)
+		if *game.TurnTaker == player.ID {
+			choice := AttackMenu()
+			if choice != "quit" {
+				// temporary
+				pkmnToAttack := opponent.Pokemon[0].ID
+				fmt.Println("pkmnToAttack", pkmnToAttack)
+				_, err := AttackPkmn(pkmnToAttack, choice)
+				if err != nil {
+					panic(err)
+				}
 
-			// temporary
-			pkmnToAttack := opponent.Pokemon[0].ID
-			fmt.Println("pkmnToAttack", pkmnToAttack)
-			_, err := AttackPkmn(pkmnToAttack, choice)
-			if err != nil {
-				panic(err)
+				_, err = ChangeTurns()
+				if err != nil {
+					panic(err)
+				}
+				UpdateGameData(&game)
+			} else if choice == "quit" {
+				return
 			}
-		} else if choice == "quit" {
-			return
+		} else {
+			time.Sleep(500 * time.Millisecond)
+			fmt.Println("Waiting for turn!")
 		}
 
 		isOver, err = IsGameOver()
