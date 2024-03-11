@@ -101,10 +101,11 @@ func ClientStart() {
 					panic(err)
 				}
 
-				_, err = ChangeTurns()
+				id, err := ChangeTurns()
 				if err != nil {
 					panic(err)
 				}
+				fmt.Printf("result of turn taker from server: %s", id)
 				UpdateGameData(&game)
 			} else if choice == "quit" {
 				return

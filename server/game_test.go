@@ -39,4 +39,10 @@ func TestTakingTurns(t *testing.T) {
 	if *game.TurnTaker == currentTurn {
 		t.Errorf("Did not update TurnTaker properly. Previous: %s, Current: %s", currentTurn, *game.TurnTaker)
 	}
+
+	currentTurn = *game.TurnTaker
+	game.AlternateTurns()
+	if *game.TurnTaker == currentTurn {
+		t.Errorf("Did not update TurnTaker properly. Previous: %s, Current: %s", currentTurn, *game.TurnTaker)
+	}
 }
