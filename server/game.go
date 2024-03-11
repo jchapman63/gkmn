@@ -18,7 +18,7 @@ type Game struct {
 	FightingPokemon []*Pokemon `json:"fightingPkmn"`
 
 	// The player currently taking action in the game
-	TurnTaker *uuid.UUID `json:"turnTaker"`
+	TurnTaker uuid.UUID `json:"turnTaker"`
 }
 
 // all pokemon in one player's party have fainted
@@ -47,14 +47,16 @@ func (g *Game) AlternateTurns() {
 		panic("Improper use of function `AlternateTurns`: Not enough players are in the game")
 	}
 
-	if g.TurnTaker == nil {
+	if g.TurnTaker.String() == uuid.Nil.String() {
 		fmt.Println("No turn set yet.  TurnTaker setting now")
-		g.TurnTaker = &g.Players[0].ID
+		g.TurnTaker = g.Players[0].ID
 	} else {
+		current := g.TurnTaker
 		for i := range g.Players {
-			current := g.TurnTaker
-			if current != &g.Players[i].ID {
-				g.TurnTaker = &g.Players[i].ID
+			if current != g.Players[i].ID {
+				fmt.Printf("current Turn: %s ", current.String())
+				fmt.Printf("update to: %s\n", g.Players[i].ID.String())
+				g.TurnTaker = g.Players[i].ID
 			}
 		}
 	}

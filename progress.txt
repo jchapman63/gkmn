@@ -26,5 +26,12 @@ Today's goal is to set up turn based game logic. DONE. TODO: implement client si
 3/10/24
 I refactored the game call and server response to creating a player so that the player struct gets returned to the client.
 I have turn based kind of working in the CLI
+
+3/11/24
 I confirmed that the TurnTaker switches properly the first time but does not change on any subsequent calls
-This is also reflected in a test
+This is also reflected in a test.  THE PROBLEM: I am using *uuid.UUID for TurnTaker, so when I am swapping assignments, I am swapping
+memory address locations.  On the second swap, I lose the memory address of one of the IDs... I think.  No, it was because
+I had the `current` variable set in the wrong spot, so it was resetting on each loop.  This caused the loop to run an incorrect number
+of times and reset the TurnTaker variable to what it originally was.  
+
+I ran a full successful game taking turns in the CLI

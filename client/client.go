@@ -42,7 +42,7 @@ func ClientStart() {
 	}
 	for len(game.Players) != 2 {
 		UpdateGameData(&game)
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(1000 * time.Millisecond)
 		fmt.Println("Checking for other players...")
 	}
 
@@ -76,7 +76,7 @@ func ClientStart() {
 	}
 
 	// ensure first turn is selected
-	for game.TurnTaker == nil {
+	for game.TurnTaker.String() == "" {
 		UpdateGameData(&game)
 	}
 
@@ -88,9 +88,8 @@ func ClientStart() {
 	for !isOver {
 		// generate and get actions
 		UpdateGameData(&game)
-		fmt.Printf("TurnTaker: %s == player.ID: %s", game.TurnTaker, player.ID)
-		fmt.Printf("Result of comparison: %t", *game.TurnTaker == player.ID)
-		if *game.TurnTaker == player.ID {
+
+		if game.TurnTaker.String() == player.ID.String() {
 			choice := AttackMenu()
 			if choice != "quit" {
 				// temporary
@@ -101,17 +100,16 @@ func ClientStart() {
 					panic(err)
 				}
 
-				id, err := ChangeTurns()
+				_, err = ChangeTurns()
 				if err != nil {
 					panic(err)
 				}
-				fmt.Printf("result of turn taker from server: %s", id)
 				UpdateGameData(&game)
 			} else if choice == "quit" {
 				return
 			}
 		} else {
-			time.Sleep(500 * time.Millisecond)
+			time.Sleep(1000 * time.Millisecond)
 			fmt.Println("Waiting for turn!")
 		}
 
