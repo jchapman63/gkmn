@@ -35,3 +35,12 @@ I had the `current` variable set in the wrong spot, so it was resetting on each 
 of times and reset the TurnTaker variable to what it originally was.  
 
 I ran a full successful game taking turns in the CLI
+
+TODO: Get logging in CLI to be more useful
+
+3/14/24
+
+I will definitely not be able to finish this whole project but it was nice to get me started with
+containerizing a Go app.  The last piece I want to put together is implementing a docker compose file that stands up
+postgres and sends some simple data to it.  This I think will bring home what I wanted to figure out how to do, which was containerize
+an app and have some persistent data.  My presentation will focus on docker and what it does with this app.

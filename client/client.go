@@ -53,6 +53,7 @@ func ClientStart() {
 		fmt.Println("Player ", playerName, " Failed to add pokemon : ", err)
 		return
 	}
+	updatePlayer(&game, &player)
 
 	// find player's opponent
 	opponent := game.Players[1]
@@ -88,8 +89,13 @@ func ClientStart() {
 	for !isOver {
 		// generate and get actions
 		UpdateGameData(&game)
-
+		updatePlayer(&game, &player)
 		if game.TurnTaker.String() == player.ID.String() {
+			// TODO: see how this is incomplete
+			fmt.Println(player)
+			// fmt.Println("--------------------------")
+			// fmt.Printf("%s\n%s: %d", player.Name, player.Pokemon[0].Name, player.Pokemon[0].Hp)
+			// fmt.Println("--------------------------")
 			choice := AttackMenu()
 			if choice != "quit" {
 				// temporary
@@ -116,6 +122,14 @@ func ClientStart() {
 		isOver, err = IsGameOver()
 		if err != nil {
 			fmt.Println("Connection Failed: ", err)
+		}
+	}
+}
+
+func updatePlayer(game *server.Game, player *server.Player) {
+	for _, connectedPlayer := range game.Players {
+		if connectedPlayer.ID == player.ID {
+			player = connectedPlayer
 		}
 	}
 }
