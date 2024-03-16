@@ -8,6 +8,12 @@ import (
 )
 
 type Game struct {
+	// First player to connect is Host
+	Host *Player `json:"host"`
+
+	// Second player to connect is Opponent
+	Opponent *Player `json:"opponent"`
+
 	// All pokemon
 	AvailablePokemon []Pokemon `json:"pokemon"`
 
@@ -16,12 +22,6 @@ type Game struct {
 
 	// The player currently taking action in the game
 	TurnTaker uuid.UUID `json:"turnTaker"`
-
-	// First player to connect is Host
-	Host *Player `json:"host"`
-
-	// Second player to connect is Opponent
-	Opponent *Player `json:"opponent"`
 }
 
 // all pokemon in one player's party have fainted
