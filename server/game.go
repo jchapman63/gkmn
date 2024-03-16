@@ -27,15 +27,19 @@ type Game struct {
 // all pokemon in one player's party have fainted
 // TODO: allow for multiple pokemon per player
 func (g *Game) IsGameOver() bool {
-	for i := range g.Host.Pokemon {
-		if g.Host.Pokemon[i].Hp <= 0 {
-			return true
+	if g.Host != nil {
+		for i := range g.Host.Pokemon {
+			if g.Host.Pokemon[i].Hp <= 0 {
+				return true
+			}
 		}
 	}
 
-	for i := range g.Opponent.Pokemon {
-		if g.Opponent.Pokemon[i].Hp <= 0 {
-			return true
+	if g.Opponent != nil {
+		for i := range g.Opponent.Pokemon {
+			if g.Opponent.Pokemon[i].Hp <= 0 {
+				return true
+			}
 		}
 	}
 

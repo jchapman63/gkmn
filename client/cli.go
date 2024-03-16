@@ -5,6 +5,7 @@ package client
 import (
 	"bufio"
 	"fmt"
+	"gkmn/server"
 	"os"
 	"strings"
 
@@ -19,6 +20,7 @@ import (
 // - AttackMenu
 // - CreatePlayer
 // - ChooseMonster
+// - PrintGameState
 func MainMenu() string {
 	menu := gocliselect.NewMenu("How would you like to play?")
 
@@ -70,4 +72,12 @@ func AttackMenu() string {
 	actionChoice := actionMenu.Display()
 
 	return actionChoice
+}
+
+func PrintGameState(game *server.Game) {
+	fmt.Println("--------------------------")
+	fmt.Printf("Host: %s,\nHostMonster: %s\n, HP: %d;\n", game.Host.Name, game.Host.Pokemon[0].Name, game.Host.Pokemon[0].Hp)
+	fmt.Println()
+	fmt.Printf("Host: %s,\nHostMonster: %s\n, HP: %d;\n", game.Opponent.Name, game.Opponent.Pokemon[0].Name, game.Opponent.Pokemon[0].Hp)
+	fmt.Println("--------------------------")
 }

@@ -6,6 +6,8 @@ import (
 	"gkmn/server"
 	"os/exec"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 // initialize game variables
@@ -30,6 +32,7 @@ func ClientStart() {
 
 	joinAndWait()
 	playerChoosePokemon()
+	setStartState()
 
 	// set initial turn
 	if isHost {
@@ -50,34 +53,30 @@ func ClientStart() {
 		fmt.Println("Connection Failed: ", err)
 	}
 	for !isOver {
-		// generate and get actions
 		UpdateGameData(&game)
-		if game.TurnTaker.String() == player.ID.String() {
-			// TODO: see how this is incomplete
-			fmt.Println(player)
-			// TODO: good idea, but refactors effect this
-			// fmt.Println("--------------------------")
-			// fmt.Printf("%s\n%s: %d", player.Name, player.Pokemon[0].Name, player.Pokemon[0].Hp)
-			// fmt.Println("--------------------------")
-			choice := AttackMenu()
-			if choice != "quit" {
-				// temporary
-				pkmnToAttack := game.Opponent.Pokemon[0].ID
-				fmt.Println("pkmnToAttack", pkmnToAttack)
-				_, err := AttackPkmn(pkmnToAttack, choice)
-				if err != nil {
-					panic(err)
-				}
-
-				_, err = ChangeTurns()
-				if err != nil {
-					panic(err)
-				}
-				UpdateGameData(&game)
-			} else if choice == "quit" {
+		if isHost && (game.TurnTaker.String() == game.Host.ID.String()) {
+			// host plays
+			played := attackEnemy(&isHost)
+			if !played {
+				// end game
+				// TODO: clean up container
 				return
 			}
+			ChangeTurns()
+			UpdateGameData(&game)
+			fmt.Println(game.TurnTaker.String())
+		} else if !isHost && (game.TurnTaker.String() == game.Opponent.ID.String()) {
+			// Opponent plays
+			played := attackEnemy(&isHost)
+			if !played {
+				// end game
+				// TODO: clean up container
+				return
+			}
+			ChangeTurns()
+			UpdateGameData(&game)
 		} else {
+			// waiting for turn
 			time.Sleep(1000 * time.Millisecond)
 			fmt.Println("Waiting for turn!")
 		}
@@ -87,6 +86,38 @@ func ClientStart() {
 			fmt.Println("Connection Failed: ", err)
 		}
 	}
+}
+
+func setStartState() {
+	for len(game.Host.Pokemon) == 0 || len(game.Opponent.Pokemon) == 0 {
+		time.Sleep(1000 * time.Millisecond)
+		fmt.Println("Waiting for all players to select a monster!")
+		UpdateGameData(&game)
+	}
+}
+
+// true if attacked, false is quit
+func attackEnemy(isHost *bool) bool {
+	choice := AttackMenu()
+
+	var pkmnToAttack uuid.UUID
+	if *isHost {
+		pkmnToAttack = game.Opponent.Pokemon[0].ID
+	} else {
+		pkmnToAttack = game.Host.Pokemon[0].ID
+	}
+
+	if choice != "quit" {
+		fmt.Printf("Host attacking Opponent mon: %s\n", pkmnToAttack)
+		_, err := AttackPkmn(pkmnToAttack, choice)
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		return false
+	}
+
+	return true
 }
 
 func playerChoosePokemon() {
@@ -107,7 +138,8 @@ func joinAndWait() {
 	fmt.Println(player.Name, "Joined the server")
 	UpdateGameData(&game)
 
-	for game.Opponent == nil {
+	// do not exit until both Host and Opponent are in game
+	for game.Opponent == nil || game.Host == nil {
 		UpdateGameData(&game)
 		time.Sleep(1000 * time.Millisecond)
 		fmt.Println("Checking for other players...")
