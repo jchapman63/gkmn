@@ -82,11 +82,11 @@ func Server() {
 			panic(err)
 		}
 
-		playerName := adder.PlayerName
+		playerID := adder.PlayerID
 		monsterName := adder.MonsterName
 		monster := NewMonster(monsterName)
 		for i := range game.Players {
-			if game.Players[i].Name == playerName {
+			if game.Players[i].ID == playerID {
 				game.Players[i].Pokemon = append(game.Players[i].Pokemon, &monster)
 			}
 		}

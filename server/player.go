@@ -3,8 +3,8 @@ package server
 import "github.com/google/uuid"
 
 type MonsterAdder struct {
-	PlayerName  string `json:"player_name"`
-	MonsterName string `json:"monster_name"`
+	PlayerID    uuid.UUID `json:"player_id"`
+	MonsterName string    `json:"monster_name"`
 }
 
 func NewPlayer(name string) Player {

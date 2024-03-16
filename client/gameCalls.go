@@ -98,23 +98,23 @@ func ChangeTurns() (uuid.UUID, error) {
 	return turnID, nil
 }
 
-func JoinGame(p string) (server.Player, error) {
-	newData, _ := json.Marshal(p)
+func JoinGame(name string, player *server.Player) {
+	newData, _ := json.Marshal(name)
 	resp, err := http.Post(baseUrl+"/join", "application/json", bytes.NewBuffer(newData))
 	if err != nil {
+		fmt.Println("Player ", name, "Connection Failed: ", err)
 		panic(err)
 	}
 
-	var player server.Player
 	bodyJSON, err := io.ReadAll(resp.Body)
 	if err != nil {
+		fmt.Println("Player ", name, "Connection Failed: ", err)
 		panic(err)
 	}
 	if err := json.Unmarshal(bodyJSON, &player); err != nil {
+		fmt.Println("Player ", name, "Connection Failed: ", err)
 		panic(err)
 	}
-
-	return player, nil
 }
 
 func AttackPkmn(target uuid.UUID, move string) (*http.Response, error) {
@@ -130,10 +130,10 @@ func AttackPkmn(target uuid.UUID, move string) (*http.Response, error) {
 	return resp, nil
 }
 
-func AddPokemonToPlayer(playerName string, pkmnName string) (*http.Response, error) {
+func AddPokemonToPlayer(playerID uuid.UUID, pkmnName string) (*http.Response, error) {
 
 	data := server.MonsterAdder{
-		PlayerName:  playerName,
+		PlayerID:    playerID,
 		MonsterName: pkmnName,
 	}
 

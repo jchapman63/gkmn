@@ -1,0 +1,14 @@
+8:32 PM , 3/15/24
+
+Currently working on updating the client.go file to be organized better.  Its a mess.  I realized that the function for adding pokemon to a player is horribly set up, passing a 
+string of player name instead of using UUID.  Fixing this now.
+
+abstractions made so far
+	joinAndWait()
+	playerChoosePokemon()
+	findOpponent()
+
+by instantiating player and opponent separate from game, I am running into an issue where opponent and player may not update with game.  I think this is because the
+reference becomes a locally addressed thing, so changing game doesn't mean it changes the same player or opponent I think it does?
+
+I probably shoud just pull player and opponent off game ?  As in, the first player to join becomes player and the next to join becomes opponent.  Yea lets fkin do it.

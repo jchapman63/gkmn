@@ -8,6 +8,11 @@ import (
 	"time"
 )
 
+// initialize game variables
+var player server.Player
+var game server.Game
+var opponent server.Player
+
 func ClientStart() {
 
 	var action string = MainMenu()
@@ -18,55 +23,15 @@ func ClientStart() {
 		startServer()
 		isHost = true
 	}
-	// initialize game
-	var game server.Game
+
 	err := UpdateGameData(&game)
 	if err != nil {
 		panic(err)
 	}
 
-	// player create interface
-	playerName := NamePlayer()
-
-	// Player joining sever
-	player, err := JoinGame(playerName)
-	if err != nil {
-		fmt.Println("Player ", playerName, "Connection Failed: ", err)
-		return
-	}
-	fmt.Println(player.Name, "Joined the server")
-
-	// player queue
-	if len(game.Players) != 2 {
-		fmt.Println("Waiting for player 2")
-	}
-	for len(game.Players) != 2 {
-		UpdateGameData(&game)
-		time.Sleep(1000 * time.Millisecond)
-		fmt.Println("Checking for other players...")
-	}
-
-	// Player chooses pokemon to fight with
-	monster := ChooseMonster()
-	_, err = AddPokemonToPlayer(player.Name, monster)
-	if err != nil {
-		fmt.Println("Player ", playerName, " Failed to add pokemon : ", err)
-		return
-	}
-	updatePlayer(&game, &player)
-
-	// find player's opponent
-	opponent := game.Players[1]
-	if player.ID == opponent.ID {
-		opponent = game.Players[0]
-	}
-
-	// wait for opponent to select pokemon
-	for len(opponent.Pokemon) == 0 {
-		UpdateGameData(&game)
-		time.Sleep(500 * time.Millisecond)
-		fmt.Println("Waiting for opponent selection...")
-	}
+	joinAndWait()
+	playerChoosePokemon()
+	findOpponent()
 
 	// set initial turn
 	if isHost {
@@ -89,7 +54,7 @@ func ClientStart() {
 	for !isOver {
 		// generate and get actions
 		UpdateGameData(&game)
-		updatePlayer(&game, &player)
+		updatePlayer()
 		if game.TurnTaker.String() == player.ID.String() {
 			// TODO: see how this is incomplete
 			fmt.Println(player)
@@ -126,10 +91,55 @@ func ClientStart() {
 	}
 }
 
-func updatePlayer(game *server.Game, player *server.Player) {
+func playerChoosePokemon() {
+	// Player chooses pokemon to fight with
+	monster := ChooseMonster()
+	_, err := AddPokemonToPlayer(player.ID, monster)
+	if err != nil {
+		fmt.Println("Player ", player.Name, " Failed to add pokemon : ", err)
+		return
+	}
+	updatePlayer()
+}
+
+func joinAndWait() {
+	// player create interface
+	playerName := NamePlayer()
+
+	// Player joining sever
+	JoinGame(playerName, &player)
+	fmt.Println(player.Name, "Joined the server")
+
+	// player queue
+	if len(game.Players) != 2 {
+		fmt.Println("Waiting for player 2")
+	}
+	for len(game.Players) != 2 {
+		UpdateGameData(&game)
+		time.Sleep(1000 * time.Millisecond)
+		fmt.Println("Checking for other players...")
+	}
+}
+
+func findOpponent() {
+	// find player's opponent
+	opponent = *game.Players[1]
+	if player.ID == opponent.ID {
+		opponent = *game.Players[0]
+	}
+
+	// wait for opponent to select pokemon
+	for len(opponent.Pokemon) == 0 {
+		UpdateGameData(&game)
+		time.Sleep(500 * time.Millisecond)
+		fmt.Println("Waiting for opponent selection...")
+	}
+}
+
+func updatePlayer() {
 	for _, connectedPlayer := range game.Players {
 		if connectedPlayer.ID == player.ID {
-			player = connectedPlayer
+			player = *connectedPlayer
 		}
 	}
 }
