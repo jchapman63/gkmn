@@ -76,8 +76,8 @@ func AttackMenu() string {
 
 func PrintGameState(game *server.Game) {
 	fmt.Println("--------------------------")
-	fmt.Printf("Host: %s,\nHostMonster: %s\n, HP: %d;\n", game.Host.Name, game.Host.Pokemon[0].Name, game.Host.Pokemon[0].Hp)
+	fmt.Printf("Host: %s,\nHostMonster: %s,\n HP: %d;\n", game.Host.Name, game.Host.Pokemon[0].Name, game.Host.Pokemon[0].Hp)
 	fmt.Println()
-	fmt.Printf("Host: %s,\nHostMonster: %s\n, HP: %d;\n", game.Opponent.Name, game.Opponent.Pokemon[0].Name, game.Opponent.Pokemon[0].Hp)
+	fmt.Printf("Opponent: %s,\nOpponentMonster: %s,\n HP: %d;\n", game.Opponent.Name, game.Opponent.Pokemon[0].Name, game.Opponent.Pokemon[0].Hp)
 	fmt.Println("--------------------------")
 }

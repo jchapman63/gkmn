@@ -52,9 +52,12 @@ func ClientStart() {
 	if err != nil {
 		fmt.Println("Connection Failed: ", err)
 	}
+
+	refreshCount := 0
 	for !isOver {
 		UpdateGameData(&game)
 		if isHost && (game.TurnTaker.String() == game.Host.ID.String()) {
+			PrintGameState(&game)
 			// host plays
 			played := attackEnemy(&isHost)
 			if !played {
@@ -64,8 +67,9 @@ func ClientStart() {
 			}
 			ChangeTurns()
 			UpdateGameData(&game)
-			fmt.Println(game.TurnTaker.String())
+			refreshCount = 0
 		} else if !isHost && (game.TurnTaker.String() == game.Opponent.ID.String()) {
+			PrintGameState(&game)
 			// Opponent plays
 			played := attackEnemy(&isHost)
 			if !played {
@@ -75,10 +79,14 @@ func ClientStart() {
 			}
 			ChangeTurns()
 			UpdateGameData(&game)
+			refreshCount = 0
 		} else {
+			if refreshCount == 0 {
+				fmt.Println("Waiting for turn!")
+			}
 			// waiting for turn
 			time.Sleep(1000 * time.Millisecond)
-			fmt.Println("Waiting for turn!")
+			refreshCount += 1
 		}
 
 		isOver, err = IsGameOver()
@@ -89,9 +97,9 @@ func ClientStart() {
 }
 
 func setStartState() {
+	fmt.Println("Waiting for all players to select a monster!")
 	for len(game.Host.Pokemon) == 0 || len(game.Opponent.Pokemon) == 0 {
 		time.Sleep(1000 * time.Millisecond)
-		fmt.Println("Waiting for all players to select a monster!")
 		UpdateGameData(&game)
 	}
 }
@@ -108,7 +116,6 @@ func attackEnemy(isHost *bool) bool {
 	}
 
 	if choice != "quit" {
-		fmt.Printf("Host attacking Opponent mon: %s\n", pkmnToAttack)
 		_, err := AttackPkmn(pkmnToAttack, choice)
 		if err != nil {
 			panic(err)
@@ -139,10 +146,10 @@ func joinAndWait() {
 	UpdateGameData(&game)
 
 	// do not exit until both Host and Opponent are in game
+	fmt.Println("Checking for other players...")
 	for game.Opponent == nil || game.Host == nil {
 		UpdateGameData(&game)
 		time.Sleep(1000 * time.Millisecond)
-		fmt.Println("Checking for other players...")
 	}
 }
 
