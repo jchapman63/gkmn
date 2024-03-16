@@ -11,7 +11,6 @@ import (
 // initialize game variables
 var player server.Player
 var game server.Game
-var opponent server.Player
 
 func ClientStart() {
 
@@ -31,7 +30,6 @@ func ClientStart() {
 
 	joinAndWait()
 	playerChoosePokemon()
-	findOpponent()
 
 	// set initial turn
 	if isHost {
@@ -54,17 +52,17 @@ func ClientStart() {
 	for !isOver {
 		// generate and get actions
 		UpdateGameData(&game)
-		updatePlayer()
 		if game.TurnTaker.String() == player.ID.String() {
 			// TODO: see how this is incomplete
 			fmt.Println(player)
+			// TODO: good idea, but refactors effect this
 			// fmt.Println("--------------------------")
 			// fmt.Printf("%s\n%s: %d", player.Name, player.Pokemon[0].Name, player.Pokemon[0].Hp)
 			// fmt.Println("--------------------------")
 			choice := AttackMenu()
 			if choice != "quit" {
 				// temporary
-				pkmnToAttack := opponent.Pokemon[0].ID
+				pkmnToAttack := game.Opponent.Pokemon[0].ID
 				fmt.Println("pkmnToAttack", pkmnToAttack)
 				_, err := AttackPkmn(pkmnToAttack, choice)
 				if err != nil {
@@ -99,48 +97,20 @@ func playerChoosePokemon() {
 		fmt.Println("Player ", player.Name, " Failed to add pokemon : ", err)
 		return
 	}
-	updatePlayer()
+	UpdateGameData(&game)
 }
 
 func joinAndWait() {
-	// player create interface
+	// create player name and join game
 	playerName := NamePlayer()
-
-	// Player joining sever
 	JoinGame(playerName, &player)
 	fmt.Println(player.Name, "Joined the server")
+	UpdateGameData(&game)
 
-	// player queue
-	if len(game.Players) != 2 {
-		fmt.Println("Waiting for player 2")
-	}
-	for len(game.Players) != 2 {
+	for game.Opponent == nil {
 		UpdateGameData(&game)
 		time.Sleep(1000 * time.Millisecond)
 		fmt.Println("Checking for other players...")
-	}
-}
-
-func findOpponent() {
-	// find player's opponent
-	opponent = *game.Players[1]
-	if player.ID == opponent.ID {
-		opponent = *game.Players[0]
-	}
-
-	// wait for opponent to select pokemon
-	for len(opponent.Pokemon) == 0 {
-		UpdateGameData(&game)
-		time.Sleep(500 * time.Millisecond)
-		fmt.Println("Waiting for opponent selection...")
-	}
-}
-
-func updatePlayer() {
-	for _, connectedPlayer := range game.Players {
-		if connectedPlayer.ID == player.ID {
-			player = *connectedPlayer
-		}
 	}
 }
 

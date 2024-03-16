@@ -85,10 +85,11 @@ func Server() {
 		playerID := adder.PlayerID
 		monsterName := adder.MonsterName
 		monster := NewMonster(monsterName)
-		for i := range game.Players {
-			if game.Players[i].ID == playerID {
-				game.Players[i].Pokemon = append(game.Players[i].Pokemon, &monster)
-			}
+
+		if playerID == game.Host.ID {
+			game.Host.Pokemon = append(game.Host.Pokemon, &monster)
+		} else {
+			game.Opponent.Pokemon = append(game.Opponent.Pokemon, &monster)
 		}
 
 		game.FightingPokemon = append(game.FightingPokemon, &monster)

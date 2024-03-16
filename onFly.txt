@@ -12,3 +12,8 @@ by instantiating player and opponent separate from game, I am running into an is
 reference becomes a locally addressed thing, so changing game doesn't mean it changes the same player or opponent I think it does?
 
 I probably shoud just pull player and opponent off game ?  As in, the first player to join becomes player and the next to join becomes opponent.  Yea lets fkin do it.
+I updated everything in the server side, so this should all be working properly now.  I just need to update the client side.
+
+Host and Opponent naming should be agnostic to who is making the calls.  Host will always be whoever started the game and opponent is whoever connected to the game
+
+This is actually really bad because of how client works.  I have to be explicit about who is doing what.  Maybe Host and Connected are better names.
