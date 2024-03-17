@@ -70,41 +70,5 @@ OR I can have client keep track of "host" and make calls off that ?
 3/16/24
 
 Here is the client logic that I should follow: if is host, attack opponent.  If is opponent (not host) attack host.
-
-		// generate and get actions
-		UpdateGameData(&game)
-		if game.TurnTaker.String() == player.ID.String() {
-			PrintGameState(&game)
-			choice := AttackMenu()
-			if choice != "quit" {
-				if isHost {
-					pkmnToAttack := game.Opponent.Pokemon[0].ID
-					fmt.Printf("Host attacking Opponent mon: %s\n", pkmnToAttack)
-					_, err := AttackPkmn(pkmnToAttack, choice)
-					if err != nil {
-						panic(err)
-					}
-				} else {
-					pkmnToAttack := game.Host.Pokemon[0].ID
-					fmt.Printf("Opponent attacking Host mon: %s\n", pkmnToAttack)
-					_, err := AttackPkmn(pkmnToAttack, choice)
-					if err != nil {
-						panic(err)
-					}
-				}
-				UpdateGameData(&game)
-				PrintGameState(&game)
-
-				_, err = ChangeTurns()
-				if err != nil {
-					panic(err)
-				}
-				UpdateGameData(&game)
-			} else if choice == "quit" {
-				return
-				// TODO clean up docker container
-			}
-		} else {
-			time.Sleep(1000 * time.Millisecond)
-			fmt.Println("Waiting for turn!")
-		}
+*Next Step*: create a docker compose file that builds in a postgres image/container to the app.  Also use that compose file to create a volume that persists data.  This first
+volume will store completed games.  After this, create a game history menu in the CLI that reads this information.
