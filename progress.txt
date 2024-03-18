@@ -77,3 +77,5 @@ volume will store completed games.  After this, create a game history menu in th
 
 My next task is to connect to a postgres db, but I am not sure how that plays out.  Do I *need* a compose file?  Can I just layer pg into my Dockerfile ? (Probably the latter).
 After that, I want to create all the logic behing storing and retrieving games played.
+
+I have successfully connected!
