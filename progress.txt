@@ -69,6 +69,11 @@ OR I can have client keep track of "host" and make calls off that ?
 
 3/16/24
 
-Here is the client logic that I should follow: if is host, attack opponent.  If is opponent (not host) attack host.
+Here is the client logic that I should follow: if is host, attack opponent.  If is opponent (not host) attack host. <- implemented
 *Next Step*: create a docker compose file that builds in a postgres image/container to the app.  Also use that compose file to create a volume that persists data.  This first
 volume will store completed games.  After this, create a game history menu in the CLI that reads this information.
+
+3/18/24
+
+My next task is to connect to a postgres db, but I am not sure how that plays out.  Do I *need* a compose file?  Can I just layer pg into my Dockerfile ? (Probably the latter).
+After that, I want to create all the logic behing storing and retrieving games played.
