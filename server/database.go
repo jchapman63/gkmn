@@ -6,10 +6,9 @@ import (
 	_ "github.com/lib/pq"
 )
 
-// this test passes when the container isn't running ?
 func TestConnection() {
 	// connect to pre created user and database (created to test out pgsql in a docker container)
-	connectionStr := "postgres://docker_user/docker_user@localhost:5432/docker_user"
+	connectionStr := "postgres://docker_user/docker_user@localhost:5433/docker_user"
 
 	conn, err := sql.Open("postgres", connectionStr)
 	if err != nil {
