@@ -79,3 +79,15 @@ My next task is to connect to a postgres db, but I am not sure how that plays ou
 After that, I want to create all the logic behing storing and retrieving games played.
 
 I have successfully connected!
+
+3/24/24
+
+I am going to create a JSONB focused table in postgres that will contain game data at the end of a game.  I'll add a conditional
+to the log game state function that sends game to postgres.  I'll start by building the postgres functionality for this 
+in database.go.
+
+I have a handful of nuances that I should work out for the game playing logic in client.go.  It is pretty rough right now.  I think that storing to
+the database does not work for non host client side.  
+
+Current ISSUE: In the game, while the container is running, I am failing to connect to the database.  I am not sure why this is.
+Maybe messages can't get out?

@@ -132,6 +132,11 @@ func Server() {
 		json.NewEncoder(w).Encode(game.IsGameOver())
 	})
 
+	http.HandleFunc("/storeGame", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Trying to Store")
+		StoreGameState(game)
+	})
+
 	fmt.Println("Server is listening localhost:8080")
 
 	// serve the application

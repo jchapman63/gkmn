@@ -6,6 +6,7 @@ import (
 	"slices"
 
 	// "github.com/jchapman63/gokemon/client"
+
 	"gkmn/client"
 	"gkmn/server"
 )
@@ -22,4 +23,14 @@ func main() {
 		fmt.Println("Starting Gokemon Client!")
 		client.ClientStart()
 	}
+
+	// TODO: Remove this testing code
+	// host := server.NewPlayer("player1")
+	// opponent := server.NewPlayer("player2")
+	// var game server.Game = server.Game{
+	// 	Host:     &host,
+	// 	Opponent: &opponent,
+	// }
+	// server.StoreGameState(&game)
+
 }

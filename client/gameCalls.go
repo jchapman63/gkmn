@@ -21,9 +21,15 @@ func UpdateGameData(g *server.Game) error {
 	return nil
 }
 
-// g, the struct to unpack into
-// endpoint, the full api url
-// should fully update g
+// tells server to store its current game state into postgres
+func StoreGameData() {
+	_, err := http.Get(baseUrl + "/storeGame")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Called storage endpoint")
+}
+
 func jsonResponseToGameStruct(g *server.Game, endpoint string) (*server.Game, error) {
 	respJSON, err := http.Get(endpoint)
 	if err != nil {

@@ -27,6 +27,7 @@ func ClientStart() {
 
 	err := UpdateGameData(&game)
 	if err != nil {
+		StoreGameData()
 		panic(err)
 	}
 
@@ -38,6 +39,7 @@ func ClientStart() {
 	if isHost {
 		_, err := ChangeTurns()
 		if err != nil {
+			StoreGameData()
 			panic(err)
 		}
 	}
@@ -84,16 +86,17 @@ func ClientStart() {
 			if refreshCount == 0 {
 				fmt.Println("Waiting for turn!")
 			}
-			// waiting for turn
 			time.Sleep(1000 * time.Millisecond)
 			refreshCount += 1
 		}
 
 		isOver, err = IsGameOver()
 		if err != nil {
+			StoreGameData()
 			fmt.Println("Connection Failed: ", err)
 		}
 	}
+	StoreGameData()
 }
 
 func setStartState() {
@@ -118,9 +121,12 @@ func attackEnemy(isHost *bool) bool {
 	if choice != "quit" {
 		_, err := AttackPkmn(pkmnToAttack, choice)
 		if err != nil {
+			// TODO: The server is shut down at this point, there is no use in logging the game state.
+			StoreGameData()
 			panic(err)
 		}
 	} else {
+		StoreGameData()
 		return false
 	}
 

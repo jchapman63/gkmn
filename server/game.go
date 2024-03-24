@@ -73,4 +73,8 @@ func (g *Game) logGameStatus() {
 		panic(err)
 	}
 	fmt.Printf("%s\n", data)
+
+	if g.IsGameOver() {
+		StoreGameState(g)
+	}
 }
