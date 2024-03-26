@@ -9,7 +9,7 @@ import (
 )
 
 func StoreGameState(game *Game) {
-	connectionStr := "postgres://postgres:mysecretpassword@localhost:5433/postgres?sslmode=disable"
+	connectionStr := "postgres://user:pass@db:5433/gokemon?sslmode=disable"
 	conn, err := sql.Open("postgres", connectionStr)
 	if err != nil {
 		panic(err)
@@ -35,7 +35,8 @@ func StoreGameState(game *Game) {
 
 func TestConnection() []string {
 	// connect to pre created user and database (created to test out pgsql in a docker container)
-	connectionStr := "postgres://postgres:mysecretpassword@localhost:5433/postgres?sslmode=disable"
+	// connectionStr := "postgres://postgres:mysecretpassword@localhost:5433/postgres?sslmode=disable"
+	connectionStr := "postgres://user:pass@db:5433/gokemon?sslmode=disable"
 
 	conn, err := sql.Open("postgres", connectionStr)
 	if err != nil {
