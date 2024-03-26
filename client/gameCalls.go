@@ -95,10 +95,10 @@ func ChangeTurns() (uuid.UUID, error) {
 	var turnID uuid.UUID
 	bodyJSON, err := io.ReadAll(respJSON.Body)
 	if err != nil {
-		panic(nil)
+		panic(err)
 	}
 	if err := json.Unmarshal(bodyJSON, &turnID); err != nil {
-		panic(nil)
+		panic(err)
 	}
 
 	return turnID, nil

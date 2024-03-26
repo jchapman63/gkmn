@@ -10,7 +10,7 @@ require (
 
 require (
 	github.com/buger/goterm v1.0.3 // indirect
-	github.com/lib/pq v1.10.9 // indirect
+	github.com/lib/pq v1.10.9 // direct
 	github.com/pkg/term v1.1.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 )
