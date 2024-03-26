@@ -91,3 +91,23 @@ the database does not work for non host client side.
 
 Current ISSUE: In the game, while the container is running, I am failing to connect to the database.  I am not sure why this is.
 Maybe messages can't get out?
+
+https://stackoverflow.com/questions/41093812/how-to-get-docker-containers-to-talk-to-each-other-while-running-on-my-local-hos
+The top comment here says I can use docker network to configure my containers to talk over the bridge.  This is what
+docker compose does.  I am going to make use of the bridge.
+
+I need to build the gokemon and postgres containers with --net=bridge
+I need to have the postgres image run from the app too, with a volume
+I will start with automating the stand up of the postgres container.
+
+docker pull postgres
+docker volume create pg-volume
+docker run --name learn_postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5433:5432 -v pgdata:/var/lib/postgresql/data -d postgres
+
+3/25/24
+
+I created a compose file that stands up both service (gkmn and postgres) but still I am having issues with sending the end game data over.  
+I am not sure why this is.  
+
+Watching the docker logs at start up, should see the postgres version come through on the gkmn container if things are
+working at a connection level

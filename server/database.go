@@ -60,7 +60,7 @@ func TestConnection() []string {
 		panic(err)
 	}
 
-	queryString := fmt.Sprintf("INSERT INTO gkmn (firstData)\nVALUES ('%s');", "Hello")
+	queryString := fmt.Sprintf("INSERT INTO gkmn (firstData)\nVALUES ('%s');", "NewHello")
 	_, err = conn.Query(queryString)
 	if err != nil {
 		panic(err)

@@ -4,6 +4,7 @@ package client
 import (
 	"fmt"
 	"gkmn/server"
+	"net/http"
 	"os/exec"
 	"time"
 
@@ -163,15 +164,12 @@ func startServer() {
 	fmt.Println("Building Server...")
 	// build and run docker container
 	exec.Command("cd", "../").Output()
-	_, err := exec.Command("docker", "build", "-t", "gokemon-build", ".").Output()
-	if err != nil {
-		fmt.Println("image build failed")
-		panic(err)
-	}
 
-	_, err = exec.Command("docker", "run", "-d", "-p", "8080:8080", "gokemon-build:latest").Output()
+	_, err := exec.Command("docker", "compose", "up", "-d").Output()
 	if err != nil {
-		fmt.Println("image run failed")
+		fmt.Println("Failed compose")
 		panic(err)
 	}
+	// test connection
+	http.Get("http://localhost:8080/testDatabase")
 }

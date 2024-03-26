@@ -1,0 +1,13 @@
+services:
+  gkmn:
+    image: "gokemon-build:latest"
+    ports:
+      - "8080:8080"
+  postgres:
+    image: "postgres:latest"
+    ports:
+      - "5433:5432"
+    volumes:
+      - "~/apps/postgres:/var/lib/postgresql/data"
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword

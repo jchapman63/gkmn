@@ -1,6 +1,8 @@
 package server
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestDataBaseConnection(t *testing.T) {
 	TestConnection()

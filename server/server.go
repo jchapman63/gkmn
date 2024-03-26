@@ -137,6 +137,11 @@ func Server() {
 		StoreGameState(game)
 	})
 
+	http.HandleFunc("/testDatabase", func(w http.ResponseWriter, r *http.Request) {
+		results := TestConnection()
+		fmt.Println(results)
+	})
+
 	fmt.Println("Server is listening localhost:8080")
 
 	// serve the application
