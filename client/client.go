@@ -4,7 +4,6 @@ package client
 import (
 	"fmt"
 	"gkmn/server"
-	"net/http"
 	"os/exec"
 	"time"
 
@@ -165,11 +164,9 @@ func startServer() {
 	// build and run docker container
 	exec.Command("cd", "../").Output()
 
-	_, err := exec.Command("docker", "compose", "up", "-d").Output()
+	_, err := exec.Command("docker", "compose", "up", "-d", "--force-recreate").Output()
 	if err != nil {
 		fmt.Println("Failed compose")
 		panic(err)
 	}
-	// test connection
-	http.Get("http://localhost:8080/testDatabase")
 }

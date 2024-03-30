@@ -111,3 +111,24 @@ I am not sure why this is.
 
 Watching the docker logs at start up, should see the postgres version come through on the gkmn container if things are
 working at a connection level
+
+3/26/24
+
+I cannot figure out why I cannot connect.  Postgres doesn't even create the db I specified, or the user.
+
+3/27/24
+with the container running, the user specified in compose.yaml is not being created.  Volumes are also not being created.
+Does postgres create a volume in compose if I do not specify one? Yes!
+
+If I try to set the env POSTGRES_USER: "gokemon-host" on pg in compose, it will not create the super user of that name.  It won't even let me
+use postgres as superuser
+
+There are a handful of steps I need to do every time I restart the game.
+
+Everything is finally working! I successfully logged game state into the database! Yoohoo!  I have two questions, what happens if I compose down and restart
+the app without removing the volumes.  Is this game state still logged?
+
+Second question: What got things working, was it the network I added to compose AND removing the connection test that was running while postgres was initializing?
+I noticed that after removing it from the Go code, Postgres got into a ready to accept connections state whereas before it was not.
+
+Third question: why the hell couldn't I name a superuser through env vars?
