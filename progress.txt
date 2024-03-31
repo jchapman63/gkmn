@@ -128,7 +128,13 @@ There are a handful of steps I need to do every time I restart the game.
 Everything is finally working! I successfully logged game state into the database! Yoohoo!  I have two questions, what happens if I compose down and restart
 the app without removing the volumes.  Is this game state still logged?
 
-Second question: What got things working, was it the network I added to compose AND removing the connection test that was running while postgres was initializing?
+	Now that I added a single permenent volume to compose.yaml, yes game state persist after I tear everything down.
+
+Second question: What got things working? was it the network I added to compose AND removing the connection test that was running while postgres was initializing?
 I noticed that after removing it from the Go code, Postgres got into a ready to accept connections state whereas before it was not.
 
 Third question: why the hell couldn't I name a superuser through env vars?
+
+EoD for this project, I got compose working 100% how I want it to.  The code in the rest of the could probably use some cleaning up, but for demo 
+purposes of what docker can do, this is where I want things to be.
+

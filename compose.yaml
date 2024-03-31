@@ -11,6 +11,8 @@ services:
     image: "postgres:latest"
     ports:
       - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: "pass"
       POSTGRES_DB: "gokemon"
@@ -19,3 +21,6 @@ services:
 networks:
   learning:
     driver: bridge
+volumes:
+  db:
+    driver: local
