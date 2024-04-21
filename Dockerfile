@@ -1,6 +1,17 @@
+# Explain installing dependencies!
 FROM golang:1.21.6
 
 WORKDIR /app
+
+
+RUN apt-get update \
+    && apt-get install -y vim \
+    && apt-get install -y nano \
+    && apt-get install -y curl \
+    && apt-get install -y htop \
+    && apt-get install -y procps \
+    && apt-get install -y findutils
+
 
 COPY . ./
 RUN go mod download
