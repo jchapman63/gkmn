@@ -138,3 +138,8 @@ Third question: why the hell couldn't I name a superuser through env vars?
 EoD for this project, I got compose working 100% how I want it to.  The code in the rest of the could probably use some cleaning up, but for demo 
 purposes of what docker can do, this is where I want things to be.
 
+4/28/24
+
+Tomorrow I am presenting,  I stopped keeping track in this doc of my progress a while ago.  The presentation is mostly focused
+on virtualization techniques and its benefits.  During the demo portion, I will explain a bit about how this application
+works so we can look at the client server paradigm, where the client spins up a container server to connect to.
