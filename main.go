@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"slices"
 
-	// "github.com/jchapman63/gokemon/client"
-
 	"gkmn/client"
 	"gkmn/server"
 )
